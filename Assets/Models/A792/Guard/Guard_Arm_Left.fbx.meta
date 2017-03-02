@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 5878365c8c50cf6489aefec85100bb2c
-timeCreated: 1488279785
+guid: b155b3a1b8d46dc40a0f131fc7f83074
+timeCreated: 1488428733
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: a792_BasicGuard_mc_009
+    4300000: a792_BasicGuard_mc_010
   materials:
     importMaterials: 1
     materialName: 0

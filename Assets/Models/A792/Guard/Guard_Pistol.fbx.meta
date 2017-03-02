@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 5878365c8c50cf6489aefec85100bb2c
-timeCreated: 1488279785
+guid: 9898b0741f73ecc439415d5168b5f581
+timeCreated: 1488422283
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,9 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: a792_BasicGuard_mc_009
+    4300000: SC_Pistol_mc
+    7400000: Default Take
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -34,7 +36,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 6
+    globalScale: 3
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 0
@@ -68,7 +70,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
