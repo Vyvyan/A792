@@ -78,6 +78,7 @@
     <Compile Include="Assets\PrimitivePlus\Scripts\PrimitivePlusMeshes.cs" />
     <Compile Include="Assets\PrimitivePlus\Scripts\PrimitivePlusObject.cs" />
     <Compile Include="Assets\PrimitivePlus\Scripts\PrimitivePlusType.cs" />
+    <Compile Include="Assets\Scripts\A792 Scripts\GuardAnimationTest.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\Room.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\WorldBuilder.cs" />
     <Compile Include="Assets\Scripts\AethernautSplash.cs" />
