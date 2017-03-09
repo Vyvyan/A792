@@ -17,7 +17,7 @@ public class s_WanderingAI : MonoBehaviour
     // Use this for initialization
     void OnEnable()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponentInParent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
         timer = wanderTimer;
     }
@@ -36,6 +36,7 @@ public class s_WanderingAI : MonoBehaviour
                 timer = 0;
             }
 
+            // this is for changing wander if the player is close enough to the enemy
             if (Vector3.Distance(gameObject.transform.position, player.transform.position) < 50)
             {
                 wander = false;

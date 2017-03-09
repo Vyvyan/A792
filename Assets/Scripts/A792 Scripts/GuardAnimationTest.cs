@@ -6,6 +6,7 @@ public class GuardAnimationTest : MonoBehaviour {
     Animator anim;
     Rigidbody rb;
     Rigidbody[] limbRBs;
+    NavMeshAgent agent;
 
 	// Use this for initialization
 	void Start ()
@@ -13,6 +14,7 @@ public class GuardAnimationTest : MonoBehaviour {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         limbRBs = GetComponentsInChildren<Rigidbody>();
+        agent = GetComponentInParent<NavMeshAgent>();
 	}
 	
 	// Update is called once per frame
@@ -56,6 +58,7 @@ public class GuardAnimationTest : MonoBehaviour {
             rb.velocity = Vector3.zero;
             rb.isKinematic = false;
             Destroy(anim);
+            Destroy(agent);
         }
     }
 }
