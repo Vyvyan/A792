@@ -8,7 +8,7 @@ public class Guard : BadGuy
     public float wanderTimer;
     public bool randomWanderTime;
 
-    private Transform target;
+    private Transform moveTarget;
     private NavMeshAgent agent;
     private float timer;
 
@@ -16,7 +16,8 @@ public class Guard : BadGuy
     Rigidbody rb;
     Rigidbody[] limbRBs;
 
-    GameObject player;
+    GameObject player; 
+    public GameObject attackTarget;
 
     public Transform visionObject;
 
@@ -24,6 +25,9 @@ public class Guard : BadGuy
 
     public enum AiState { wandering, attacking, outOfRange };
     public AiState aiState;
+
+    // layer mask for finding enemies close-by (note, enemies meaning enemies of the bad guys... so players and friends)
+    int layerMask = 1 << 10;
 
     // Use this for initialization
     void OnEnable()
@@ -63,20 +67,38 @@ public class Guard : BadGuy
             }
 
             // if we see the player while wandering, then we should attack
-            /*
-            if (canSeePlayer)
+            if (attackTarget)
             {
+                // set our destination to where we're standing (round about way of stopping us, idk this sounded better for some reason)
+                agent.SetDestination(gameObject.transform.position);
+                // change ai state
                 aiState = AiState.attacking;
             }
-            */
         }
         else if (aiState == AiState.attacking)
         {
-
+            // we check this again here, for the frame the object gets destroyed
+            if (attackTarget)
+            {
+                // face the player/target
+                Vector3 targetWithoutY = new Vector3(attackTarget.transform.position.x, gameObject.transform.parent.transform.position.y, attackTarget.transform.position.z);
+                gameObject.transform.parent.gameObject.transform.LookAt(targetWithoutY);
+                // animation
+                anim.SetBool("isAiming", true);
+            }
         }
         else if (aiState == AiState.outOfRange)
         {
 
+        }
+
+        // if we ever don't have a target, then go back to wandering
+        if (!attackTarget || attackTarget == null)
+        {
+            aiState = AiState.wandering;
+            anim.SetBool("isAiming", false);
+            anim.SetBool("isFiring", false);
+            anim.SetBool("isThrowing", false);
         }
 
         // sets the float for animation movement based on the velocity of our agent
@@ -87,18 +109,28 @@ public class Guard : BadGuy
     void FixedUpdate()
     {
         // vision
-        visionObject.LookAt(player.transform.position);
-        Ray ray = new Ray(visionObject.transform.position, visionObject.transform.forward);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, visionRange))
+        // if we don't have an attack target
+        if (!attackTarget)
         {
-            if (hit.collider.gameObject.tag == "Player")
+            // find things within range around us, but only if they are on the player and friends collision layer
+            Collider[] nearbyThingsToShoot = Physics.OverlapSphere(gameObject.transform.position, attackRange / 2, layerMask);
+            // now to find the first one that is in front of us, so we can target it.
+            foreach(Collider col in nearbyThingsToShoot)
             {
-                canSeePlayer = true;
-            }
-            else
-            {
-                canSeePlayer = false;
+                Debug.Log(col.gameObject.name.ToString() + "is in our physics overlay");
+                visionObject.LookAt(col.transform.position);
+                Ray ray = new Ray(visionObject.transform.position, visionObject.transform.forward);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 100))
+                {
+                    // did we hit the object we're looking for?
+                    if (hit.collider.transform.parent == col.transform.parent)
+                    {
+                        attackTarget = col.gameObject;
+                        Debug.Log("Our target is: " + attackTarget.name.ToString());
+                        break;
+                    }
+                }
             }
         }
     }

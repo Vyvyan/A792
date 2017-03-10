@@ -4,7 +4,7 @@ using System.Collections;
 public class BadGuy : MonoBehaviour {
 
     public int health;
-    public int visionRange;
+    public float attackRange;
 
 	// Use this for initialization
 	void Start ()
