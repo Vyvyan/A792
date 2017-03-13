@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BadGuy : MonoBehaviour {
-
-    public int health;
-    public float attackRange;
-    public float attackRate;
+public class A792_GameManager : MonoBehaviour
+{
 
 	// Use this for initialization
 	void Start ()

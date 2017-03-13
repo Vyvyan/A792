@@ -78,10 +78,13 @@
     <Compile Include="Assets\PrimitivePlus\Scripts\PrimitivePlusMeshes.cs" />
     <Compile Include="Assets\PrimitivePlus\Scripts\PrimitivePlusObject.cs" />
     <Compile Include="Assets\PrimitivePlus\Scripts\PrimitivePlusType.cs" />
+    <Compile Include="Assets\Scripts\A792 Scripts\A792_GameManager.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\A792_Player.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\BadGuy.cs" />
+    <Compile Include="Assets\Scripts\A792 Scripts\DestroyAfterTimePrompt.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\Guard.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\GuardAnimationTest.cs" />
+    <Compile Include="Assets\Scripts\A792 Scripts\GuardParts.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\Room.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\WorldBuilder.cs" />
     <Compile Include="Assets\Scripts\AethernautSplash.cs" />

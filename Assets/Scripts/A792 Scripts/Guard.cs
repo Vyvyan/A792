@@ -19,7 +19,14 @@ public class Guard : BadGuy
     GameObject player; 
     public GameObject attackTarget;
 
+    float attackTimer;
+
     public Transform visionObject;
+
+    Vector3 lastKnownPositionOfTarget;
+
+    // clean up
+    DestroyAfterTimePrompt bodyCleanUp;
 
     public bool canSeePlayer;
 
@@ -45,11 +52,20 @@ public class Guard : BadGuy
         {
             wanderTimer = Random.Range(2, 15);
         }
+        limbRBs = GetComponentsInChildren<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        bodyCleanUp = GetComponentInParent<DestroyAfterTimePrompt>();
+        attackTimer = attackRate;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // These rays are ONLY to see if we can still see our target, NOT to find a new target. That is in a different function below, and those are local ray variables
+        Ray visRay;
+        RaycastHit visRayHit;
+
+        // AI
         // if we're wandering
         if (aiState == AiState.wandering)
         {
@@ -66,14 +82,6 @@ public class Guard : BadGuy
                 timer = 0;
             }
 
-            // if we see the player while wandering, then we should attack
-            if (attackTarget)
-            {
-                // set our destination to where we're standing (round about way of stopping us, idk this sounded better for some reason)
-                agent.SetDestination(gameObject.transform.position);
-                // change ai state
-                aiState = AiState.attacking;
-            }
         }
         else if (aiState == AiState.attacking)
         {
@@ -85,20 +93,71 @@ public class Guard : BadGuy
                 gameObject.transform.parent.gameObject.transform.LookAt(targetWithoutY);
                 // animation
                 anim.SetBool("isAiming", true);
+
+                // attack timer, then attack
+                attackTimer -= Time.deltaTime;
+                if (attackTimer <= 0)
+                {
+                    // attack!
+                    anim.SetBool("isFiring", true);
+                }
+
+                // while we're attacking, if we can't see out target anymore, then we should try to find him again
+                visionObject.LookAt(attackTarget.transform.position);
+                visRay = new Ray(visionObject.transform.position, visionObject.transform.forward);
+                if (Physics.Raycast(visRay, out visRayHit, attackRange))
+                {
+                    if (visRayHit.collider.gameObject == attackTarget)
+                    {
+                        // yay! we can still see our target, no problems here.
+                    }
+                    else
+                    {
+                        // we can't see the target anymore
+                        lastKnownPositionOfTarget = attackTarget.transform.position;
+                        anim.SetBool("isAiming", false);
+                        anim.SetBool("isFiring", false);
+                        agent.SetDestination(lastKnownPositionOfTarget);
+                        attackTarget = null;
+                        aiState = AiState.outOfRange;
+                    }
+                }
             }
         }
         else if (aiState == AiState.outOfRange)
         {
-
+            // once we go to the last known of the target, we can go back to wandering. If we see the target again, we'll switch back to attacking, because of the code below
+            if (agent.hasPath && agent.remainingDistance <= 1f)
+            {
+                aiState = AiState.wandering;
+            }
         }
 
-        // if we ever don't have a target, then go back to wandering
-        if (!attackTarget || attackTarget == null)
+        // IF WE AREN'T ATTACKING, WE CAN FIND A TARGET
+        if (aiState != AiState.attacking)
         {
-            aiState = AiState.wandering;
-            anim.SetBool("isAiming", false);
-            anim.SetBool("isFiring", false);
-            anim.SetBool("isThrowing", false);
+            // if we see the player to attack, then switch to attacking
+            if (attackTarget)
+            {
+                // set our destination to where we're standing (round about way of stopping us, idk this sounded better for some reason)
+                agent.SetDestination(gameObject.transform.position);
+                // change ai state
+                attackTimer = attackRate;
+                aiState = AiState.attacking;
+            }
+        }
+
+        // if we aren't searching for our target that we lost, then we go back to wandering if we don't have a target
+        if (aiState != AiState.outOfRange)
+        {
+            // if we ever don't have a target, then go back to wandering
+            if (!attackTarget || attackTarget == null)
+            {
+                aiState = AiState.wandering;
+                anim.SetBool("isAiming", false);
+                anim.SetBool("isFiring", false);
+                anim.SetBool("isThrowing", false);
+            }
         }
 
         // sets the float for animation movement based on the velocity of our agent
@@ -146,5 +205,42 @@ public class Guard : BadGuy
         NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
 
         return navHit.position;
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        Debug.Log("something hit us");
+        if (other.gameObject.tag == "Bullet")
+        {
+            TakeDamage(2);
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            KillThisGuard();
+        }
+    }
+
+    public void KillThisGuard()
+    {
+        foreach (Rigidbody tempRig in limbRBs)
+        {
+            tempRig.velocity = Vector3.zero;
+        }
+        rb.velocity = Vector3.zero;
+        rb.isKinematic = false;
+        Destroy(anim);
+        Destroy(agent);
+        bodyCleanUp.countingDown = true;
+        Destroy(this);
+    }
+
+    public void FireGun()
+    {
+
     }
 }
