@@ -13,6 +13,9 @@ public class WorldBuilder : MonoBehaviour {
     // this decides if we want to have a higher chance of moving a certain direction each pass
     int directionBias;
 
+    // starting position
+    Vector3 startingPosition;
+
     // Use this for initialization
     void Start ()
     {
@@ -20,6 +23,7 @@ public class WorldBuilder : MonoBehaviour {
         hasFinishedBuildingWorld = false;
         roomsPerPassStarting = roomsPerPass;
         BiasMovement();
+        startingPosition = gameObject.transform.position;
     }
 	
 	// Update is called once per frame
@@ -88,7 +92,7 @@ public class WorldBuilder : MonoBehaviour {
             else
             {
                 // we have no more rooms this pass, so reset it
-                gameObject.transform.position = Vector3.zero;
+                gameObject.transform.position = startingPosition;
                 numberOfPasses--;
                 BiasMovement();
                 roomsPerPass = roomsPerPassStarting;

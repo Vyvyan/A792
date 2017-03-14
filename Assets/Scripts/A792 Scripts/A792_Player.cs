@@ -50,4 +50,13 @@ public class A792_Player : MonoBehaviour {
             tempShot.GetComponent<Rigidbody>().AddForce(dir * 70, ForceMode.VelocityChange);
         }
     }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "Blood")
+        {
+            Destroy(other.gameObject);
+            Debug.Log("we ate some blood, yummy!");
+        }
+    }
 }

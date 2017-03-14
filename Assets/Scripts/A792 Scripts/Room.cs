@@ -82,22 +82,34 @@ public class Room : MonoBehaviour {
         // the direction codes are like a clock, 1 is up, 2 is right, 3 is down, 4 is left
         if (direction_code == 1)
         {
-            up_hide.SetActive(false);
+            if (up_hide)
+            {
+                up_hide.SetActive(false);
+            }
             up_show.SetActive(true);
         }
         else if (direction_code == 2)
         {
-            right_hide.SetActive(false);
-            right_show.SetActive(true);
+            if (right_hide)
+            {
+                right_hide.SetActive(false);               
+            }
+                right_show.SetActive(true);
         }
         else if (direction_code == 3)
         {
-            down_hide.SetActive(false);
+            if (down_hide)
+            {
+                down_hide.SetActive(false);
+            }
             down_show.SetActive(true);
         }
         else if (direction_code == 4)
         {
-            left_hide.SetActive(false);
+            if (left_hide)
+            {
+                left_hide.SetActive(false);
+            }
             left_show.SetActive(true);
         }
     }

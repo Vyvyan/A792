@@ -22,6 +22,8 @@ public class Guard : BadGuy
     float attackTimer;
 
     public Transform visionObject;
+    public GameObject gun;
+    public GameObject blood;
 
     Vector3 lastKnownPositionOfTarget;
 
@@ -29,6 +31,8 @@ public class Guard : BadGuy
     DestroyAfterTimePrompt bodyCleanUp;
 
     public bool canSeePlayer;
+
+    bool isAlive;
 
     public enum AiState { wandering, attacking, outOfRange };
     public AiState aiState;
@@ -56,6 +60,7 @@ public class Guard : BadGuy
         rb = GetComponent<Rigidbody>();
         bodyCleanUp = GetComponentInParent<DestroyAfterTimePrompt>();
         attackTimer = attackRate;
+        isAlive = true;
     }
 
     // Update is called once per frame
@@ -180,7 +185,7 @@ public class Guard : BadGuy
                 visionObject.LookAt(col.transform.position);
                 Ray ray = new Ray(visionObject.transform.position, visionObject.transform.forward);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 100))
+                if (Physics.SphereCast(ray, 1f, out hit, 100))
                 {
                     // did we hit the object we're looking for?
                     if (hit.collider.transform.parent == col.transform.parent)
@@ -212,21 +217,36 @@ public class Guard : BadGuy
         Debug.Log("something hit us");
         if (other.gameObject.tag == "Bullet")
         {
-            TakeDamage(2);
+            TakeDamage(2, other.gameObject.transform.position);
+            // now destroy our bullet
+            Destroy(other.gameObject);
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Vector3 hitLocation)
     {
-        health -= damage;
-        if (health <= 0)
+        if (isAlive)
         {
-            KillThisGuard();
+            Debug.Log("we took " + damage.ToString() + " damage.");
+            // remove health
+            health -= damage;
+            // spawn blood
+            while (damage > 0)
+            {
+                Instantiate(blood, hitLocation, Quaternion.identity);
+                damage--;
+            }
+            // if we have no health, kill us
+            if (health <= 0)
+            {
+                KillThisGuard();
+            }
         }
     }
 
     public void KillThisGuard()
     {
+        isAlive = false;
         foreach (Rigidbody tempRig in limbRBs)
         {
             tempRig.velocity = Vector3.zero;
@@ -235,6 +255,9 @@ public class Guard : BadGuy
         rb.isKinematic = false;
         Destroy(anim);
         Destroy(agent);
+        // make the gun physics, also parent the gun to the parent object, so it still gets destroyed, but doesn't move with the arm
+        gun.transform.SetParent(gameObject.transform.parent);
+        gun.AddComponent<Rigidbody>();
         bodyCleanUp.countingDown = true;
         Destroy(this);
     }
