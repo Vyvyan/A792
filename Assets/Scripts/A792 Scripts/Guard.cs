@@ -23,7 +23,6 @@ public class Guard : BadGuy
 
     public Transform visionObject;
     public GameObject gun;
-    public GameObject blood;
 
     Vector3 lastKnownPositionOfTarget;
 
@@ -230,12 +229,7 @@ public class Guard : BadGuy
             Debug.Log("we took " + damage.ToString() + " damage.");
             // remove health
             health -= damage;
-            // spawn blood
-            while (damage > 0)
-            {
-                Instantiate(blood, hitLocation, Quaternion.identity);
-                damage--;
-            }
+
             // if we have no health, kill us
             if (health <= 0)
             {
@@ -259,6 +253,8 @@ public class Guard : BadGuy
         gun.transform.SetParent(gameObject.transform.parent);
         gun.AddComponent<Rigidbody>();
         bodyCleanUp.countingDown = true;
+        // add humanity
+        player.GetComponent<A792_Player>().humanity++;
         Destroy(this);
     }
 

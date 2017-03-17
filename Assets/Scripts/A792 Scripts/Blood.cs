@@ -3,6 +3,11 @@ using System.Collections;
 
 public class Blood : MonoBehaviour {
 
+    //
+    /// <summary>
+    /// THIS SCRIPT ISN'T USED. IT was originally going to be used like gold in A79, but we dont use it anymore
+    /// </summary>
+
     GameObject player;
     Rigidbody bloodRB;
 
@@ -16,7 +21,6 @@ public class Blood : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate()
     {
-        //bloodRB.AddForce((player.transform.position - gameObject.transform.position).normalized * .35f, ForceMode.VelocityChange);
         gameObject.transform.LookAt(player.transform.position);
         bloodRB.MovePosition(transform.position + transform.forward * (5 * Time.deltaTime));     
     }
