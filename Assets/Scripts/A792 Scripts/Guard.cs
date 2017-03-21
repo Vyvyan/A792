@@ -217,8 +217,8 @@ public class Guard : BadGuy
         if (other.gameObject.tag == "Bullet")
         {
             TakeDamage(2, other.gameObject.transform.position);
-            // now destroy our bullet
-            Destroy(other.gameObject);
+            // now change the bullets tag, so it wont hurt anything else
+            other.gameObject.tag = "Untagged";          
         }
     }
 

@@ -86,6 +86,7 @@
     <Compile Include="Assets\Scripts\A792 Scripts\Guard.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\GuardAnimationTest.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\GuardParts.cs" />
+    <Compile Include="Assets\Scripts\A792 Scripts\IfCollideDestroyOther.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\Room.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\WorldBuilder.cs" />
     <Compile Include="Assets\Scripts\AethernautSplash.cs" />

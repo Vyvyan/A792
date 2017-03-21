@@ -8,10 +8,15 @@ public class WorldBuilder : MonoBehaviour {
     public int roomsPerPass, numberOfPasses;
     int roomsPerPassStarting;
     public static bool isWorldBuilt;
+    [Header("Normal Rooms")]
     public GameObject[] rooms;
+    [Header("Combat Rooms")]
+    public GameObject[] combatRooms;
     bool hasFinishedBuildingWorld;
     // this decides if we want to have a higher chance of moving a certain direction each pass
     int directionBias;
+    // decides where in this queue we spawn the combat room
+    int combatRoomQueueNumber;
 
     // starting position
     Vector3 startingPosition;
@@ -24,6 +29,18 @@ public class WorldBuilder : MonoBehaviour {
         roomsPerPassStarting = roomsPerPass;
         BiasMovement();
         startingPosition = gameObject.transform.position;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            Room[] rooms = FindObjectsOfType<Room>();
+            foreach (Room spawnedRoom in rooms)
+            {
+                spawnedRoom.CheckNeighbors();
+            }
+        }
     }
 	
 	// Update is called once per frame
@@ -44,7 +61,16 @@ public class WorldBuilder : MonoBehaviour {
                         // random a room to spawn
                         int rnd = Random.Range(0, rooms.Length);
                         // spawn it
-                        Instantiate(rooms[rnd], gameObject.transform.position, Quaternion.identity);
+                        if (roomsPerPass == combatRoomQueueNumber)
+                        {
+                            // Time to spawn a combat room!
+                            int crRND = Random.Range(0, combatRooms.Length);
+                            Instantiate(combatRooms[crRND], gameObject.transform.position, Quaternion.identity);
+                        }
+                        else
+                        {
+                            Instantiate(rooms[rnd], gameObject.transform.position, Quaternion.identity);
+                        }
                         // decrease our room number to spawn
                         roomsPerPass--;
                     }
@@ -118,5 +144,8 @@ public class WorldBuilder : MonoBehaviour {
     void BiasMovement()
     {
         directionBias = Random.Range(1, 4);
+
+        // we also decide where our combat rooms will spawn in this pass here
+        combatRoomQueueNumber = Random.Range(1, roomsPerPassStarting - 3);
     }
 }

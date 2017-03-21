@@ -19,7 +19,7 @@ public class GuardParts : MonoBehaviour
             if (other.relativeVelocity.magnitude > 5)
             {
                 parentScript.TakeDamage(2, other.gameObject.transform.position);
-                Destroy(other.gameObject);
+                other.gameObject.tag = "Untagged";
             }
         }
     }
