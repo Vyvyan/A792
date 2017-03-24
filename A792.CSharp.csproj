@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\A792 Scripts\GuardParts.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\IfCollideDestroyOther.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\Room.cs" />
+    <Compile Include="Assets\Scripts\A792 Scripts\Spinner.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\WorldBuilder.cs" />
     <Compile Include="Assets\Scripts\AethernautSplash.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
