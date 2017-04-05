@@ -93,7 +93,8 @@ public class Room : MonoBehaviour {
     }
 
     void HideRoomParts(int direction_code)
-    {      
+    {
+        /*     
         // the direction codes are like a clock, 1 is up, 2 is right, 3 is down, 4 is left
         if (direction_code == 1)
         {
@@ -139,6 +140,55 @@ public class Room : MonoBehaviour {
                 left_show.SetActive(true);
             }
         }
+        */
+
+        
+        // the direction codes are like a clock, 1 is up, 2 is right, 3 is down, 4 is left
+        if (direction_code == 1)
+        {
+            if (up_hide)
+            {
+                Destroy(up_hide);
+            }
+            if (up_show)
+            {
+                up_show.SetActive(true);
+            }
+        }
+        else if (direction_code == 2)
+        {
+            if (right_hide)
+            {
+                Destroy(right_hide);
+            }
+            if (right_show)
+            {
+                right_show.SetActive(true);
+            }
+        }
+        else if (direction_code == 3)
+        {
+            if (down_hide)
+            {
+                Destroy(down_hide);
+            }
+            if (down_show)
+            {
+                down_show.SetActive(true);
+            }
+        }
+        else if (direction_code == 4)
+        {
+            if (left_hide)
+            {
+                Destroy(left_hide);
+            }
+            if (left_show)
+            {
+                left_show.SetActive(true);
+            }
+        }
+        
     }
 
     void SetupCombatRooms()

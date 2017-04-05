@@ -33,14 +33,7 @@ public class WorldBuilder : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            Room[] rooms = FindObjectsOfType<Room>();
-            foreach (Room spawnedRoom in rooms)
-            {
-                spawnedRoom.CheckNeighbors();
-            }
-        }
+        
     }
 	
 	// Update is called once per frame
@@ -133,6 +126,11 @@ public class WorldBuilder : MonoBehaviour {
                 foreach (Room spawnedRoom in rooms)
                 {
                     spawnedRoom.CheckNeighbors();
+                }
+                CombatRoom[] combatRooms = FindObjectsOfType<CombatRoom>();
+                foreach (CombatRoom cbRoom in combatRooms)
+                {
+                    cbRoom.ConfigureDoors();
                 }
                 isWorldBuilt = true;
                 hasFinishedBuildingWorld = true;

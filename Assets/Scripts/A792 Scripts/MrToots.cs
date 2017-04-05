@@ -13,10 +13,13 @@ public class MrToots : MonoBehaviour {
 
     public bool isAlive;
 
+    GameObject player;
+
     // Use this for initialization
     void Start ()
     {
         isAlive = true;
+        player = GameObject.FindGameObjectWithTag("Player");
 	}
 	
 	// Update is called once per frame
@@ -28,6 +31,12 @@ public class MrToots : MonoBehaviour {
             {
                 Kill();
             }
+        }
+
+        // WE HUNT DA PLAYA
+        if (agent)
+        {
+            agent.SetDestination(player.transform.position);
         }
 	}
 
@@ -69,5 +78,15 @@ public class MrToots : MonoBehaviour {
         AutoDestroy autoDestroy = gameObject.transform.parent.gameObject.AddComponent<AutoDestroy>();
         autoDestroy.timeUntilDestroy = 8;
         isAlive = false;
+
+        // explosion
+        Collider[] colliders = Physics.OverlapSphere(gameObject.transform.position, 5);
+        foreach (Collider hit in colliders)
+        {
+            Rigidbody rb = hit.GetComponent<Rigidbody>();
+
+            if (rb != null)
+                rb.AddExplosionForce(500, gameObject.transform.position, 5, .5f);
+        }
     }
 }
