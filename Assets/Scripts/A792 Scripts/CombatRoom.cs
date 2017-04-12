@@ -7,15 +7,17 @@ public class CombatRoom : MonoBehaviour {
     bool hasInitiatedCombat;
 
     public CombatRoomDoorway[] doors;
+    private A792_GameManager gameManager;
 
     public GameObject enemySpawnerObject;
 
+    [Header("Parent Room World Center Object")]
+    public GameObject parentRoomWorldCenterObject;
+
     [Header("Room Tiles")]
     // we don't need bottom right since that is this game object
-    public GameObject topRight, topLeft, bottomLeft; 
+    public GameObject topRight, topLeft, bottomLeft;
 
-    [Header("Enemies")]
-    public GameObject mrToots_enemy;
     public int enemiesToSpawn;
     GameObject[] enemySpawnPoints;
     public float spawnRate, spawnRateCurrent;
@@ -25,6 +27,7 @@ public class CombatRoom : MonoBehaviour {
     {
         isInCombat = false;
         hasInitiatedCombat = false;
+        gameManager = FindObjectOfType<A792_GameManager>();
 	}
 	
 	// Update is called once per frame
@@ -57,8 +60,18 @@ public class CombatRoom : MonoBehaviour {
             {
                 if (spawnRateCurrent <= 0)
                 {
-                    // instantiate our enemy (needs to change so we can spawn multiple types of enemies)
-                    Instantiate(mrToots_enemy, enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].transform.position, Quaternion.identity);
+                    // super simplified spawn code, NEEDS TO BE CHANGED
+                    int rnd = Random.Range(1, 3);
+                    if (rnd == 1)
+                    {
+                        // instantiate our enemy (needs to change so we can spawn multiple types of enemies)
+                        Instantiate(gameManager.enemy_Guard, enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].transform.position, Quaternion.identity);
+                    }
+                    else if (rnd == 2)
+                    {
+                        // instantiate our enemy (needs to change so we can spawn multiple types of enemies)
+                        Instantiate(gameManager.enemy_MrToots, enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].transform.position, Quaternion.identity);
+                    }
                     // tick down the enemies to spawn
                     enemiesToSpawn--;
                     // reset our spawn rate
@@ -91,6 +104,8 @@ public class CombatRoom : MonoBehaviour {
         }
 	}
 
+
+    // this gets called from our world builder script after all rooms are placed, and after the hallways are configured
     public void ConfigureDoors()
     {
         doors = GetComponentsInChildren<CombatRoomDoorway>();
@@ -102,6 +117,9 @@ public class CombatRoom : MonoBehaviour {
         {
             doorway.TurnOnForceField();
         }
+
+        FindThisRoomsRoomTiles();
+        A792_GameManager.FindActiveCombatRooms();
     }
 
     public void UnlockRoom()
@@ -110,6 +128,9 @@ public class CombatRoom : MonoBehaviour {
         {
             doorway.TurnOffForceField();
         }
+
+        LoseThisRoomsRoomTiles();
+        A792_GameManager.ClearActiveCombatRooms();
     }
 
     void PlaceEnemySpawners()
@@ -178,5 +199,46 @@ public class CombatRoom : MonoBehaviour {
         }
 
         enemySpawnPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
+    }
+
+    void FindThisRoomsRoomTiles()
+    {
+        // we change the tags of the rooms, so we can get an array from them, then change the tags back
+        if (topRight)
+        {
+            topRight.tag = "CombatRoom";
+        }
+        if (topLeft)
+        {
+            topLeft.tag = "CombatRoom";
+        }
+        if (bottomLeft)
+        {
+            bottomLeft.tag = "CombatRoom";
+        }
+        // if we use the game object here, it will use the center of the entire cluster of rooms, since this is the parent object.
+        // so instead, we use a child object that is the same position we want, but have to make sure we don't ALSO include
+        // the game object with the tag search, so it becomes untagged here
+        parentRoomWorldCenterObject.tag = "CombatRoom";
+        gameObject.tag = "Untagged";
+    }
+
+    void LoseThisRoomsRoomTiles()
+    {
+        // we change the tags of the rooms, so we can get an array from them, then change the tags back
+        if (topRight)
+        {
+            topRight.tag = "Room";
+        }
+        if (topLeft)
+        {
+            topLeft.tag = "Room";
+        }
+        if (bottomLeft)
+        {
+            bottomLeft.tag = "Room";
+        }
+        parentRoomWorldCenterObject.tag = "Room";
+        gameObject.tag = "Room";
     }
 }

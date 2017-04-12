@@ -3,14 +3,8 @@ using System.Collections;
 
 public class Guard : BadGuy
 {
-
-    public float wanderRadius;
-    public float wanderTimer;
-    public bool randomWanderTime;
-
-    private Transform moveTarget;
-    private NavMeshAgent agent;
-    private float timer;
+    Vector3 moveTarget;
+    NavMeshAgent agent;
 
     Animator anim;
     Rigidbody rb;
@@ -33,168 +27,66 @@ public class Guard : BadGuy
 
     bool isAlive;
 
-    public enum AiState { wandering, attacking, outOfRange };
+    public enum AiState { movingToFirePoint, Attacking};
     public AiState aiState;
 
     // layer mask for finding enemies close-by (note, enemies meaning enemies of the bad guys... so players and friends)
     int layerMask = 1 << 10;
 
-    // Use this for initialization
-    void OnEnable()
-    {
-        agent = GetComponentInParent<NavMeshAgent>();
-        player = GameObject.FindGameObjectWithTag("Player");
-        timer = wanderTimer;
-        anim = GetComponent<Animator>();
-    }
 
     void Start()
     {
-        aiState = AiState.wandering;
-        if (randomWanderTime)
-        {
-            wanderTimer = Random.Range(2, 15);
-        }
+        agent = GetComponentInParent<NavMeshAgent>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        anim = GetComponent<Animator>();
+        aiState = AiState.movingToFirePoint;
         limbRBs = GetComponentsInChildren<Rigidbody>();
         rb = GetComponent<Rigidbody>();
         bodyCleanUp = GetComponentInParent<DestroyAfterTimePrompt>();
         attackTimer = attackRate;
         isAlive = true;
+
+        // Find our closest combat room, so we know where to run to (since the CR is made up of possibly 4 combat rooms, we dont want to run all the way across it)
+        if (A792_GameManager.activeCombatRooms != null)
+        {
+            GameObject closestCR = FindClosestCombatRoom(A792_GameManager.activeCombatRooms);
+            // now we have the closest room, now to find a random point in the room to run to
+            Vector2 tempVec2 = new Vector2(closestCR.transform.position.x, closestCR.transform.position.z) + Random.insideUnitCircle * 22;
+            moveTarget = new Vector3(tempVec2.x, 0, tempVec2.y);
+        }       
     }
 
     // Update is called once per frame
     void Update()
     {
-        // These rays are ONLY to see if we can still see our target, NOT to find a new target. That is in a different function below, and those are local ray variables
-        Ray visRay;
-        RaycastHit visRayHit;
-
-        // AI
-        // if we're wandering
-        if (aiState == AiState.wandering)
+        // now make them move there
+        if (moveTarget != null)
         {
-            timer += Time.deltaTime;
-
-            if (timer >= wanderTimer)
-            {
-                Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-                agent.SetDestination(newPos);
-                if (randomWanderTime)
-                {
-                    wanderTimer = Random.Range(2, 15);
-                }
-                timer = 0;
-            }
-
+            agent.SetDestination(moveTarget);
         }
-        else if (aiState == AiState.attacking)
-        {
-            // we check this again here, for the frame the object gets destroyed
-            if (attackTarget)
-            {
-                // face the player/target
-                Vector3 targetWithoutY = new Vector3(attackTarget.transform.position.x, gameObject.transform.parent.transform.position.y, attackTarget.transform.position.z);
-                gameObject.transform.parent.gameObject.transform.LookAt(targetWithoutY);
-                // animation
-                anim.SetBool("isAiming", true);
-
-                // attack timer, then attack
-                attackTimer -= Time.deltaTime;
-                if (attackTimer <= 0)
-                {
-                    // attack!
-                    anim.SetBool("isFiring", true);
-                }
-
-                // while we're attacking, if we can't see out target anymore, then we should try to find him again
-                visionObject.LookAt(attackTarget.transform.position);
-                visRay = new Ray(visionObject.transform.position, visionObject.transform.forward);
-                if (Physics.Raycast(visRay, out visRayHit, attackRange))
-                {
-                    if (visRayHit.collider.gameObject == attackTarget)
-                    {
-                        // yay! we can still see our target, no problems here.
-                    }
-                    else
-                    {
-                        // we can't see the target anymore
-                        lastKnownPositionOfTarget = attackTarget.transform.position;
-                        anim.SetBool("isAiming", false);
-                        anim.SetBool("isFiring", false);
-                        agent.SetDestination(lastKnownPositionOfTarget);
-                        attackTarget = null;
-                        aiState = AiState.outOfRange;
-                    }
-                }
-            }
-        }
-        else if (aiState == AiState.outOfRange)
-        {
-            // once we go to the last known of the target, we can go back to wandering. If we see the target again, we'll switch back to attacking, because of the code below
-            if (agent.hasPath && agent.remainingDistance <= 1f)
-            {
-                aiState = AiState.wandering;
-            }
-        }
-
-        // IF WE AREN'T ATTACKING, WE CAN FIND A TARGET
-        if (aiState != AiState.attacking)
-        {
-            // if we see the player to attack, then switch to attacking
-            if (attackTarget)
-            {
-                // set our destination to where we're standing (round about way of stopping us, idk this sounded better for some reason)
-                agent.SetDestination(gameObject.transform.position);
-                // change ai state
-                attackTimer = attackRate;
-                aiState = AiState.attacking;
-            }
-        }
-
-        // if we aren't searching for our target that we lost, then we go back to wandering if we don't have a target
-        if (aiState != AiState.outOfRange)
-        {
-            // if we ever don't have a target, then go back to wandering
-            if (!attackTarget || attackTarget == null)
-            {
-                aiState = AiState.wandering;
-                anim.SetBool("isAiming", false);
-                anim.SetBool("isFiring", false);
-                anim.SetBool("isThrowing", false);
-            }
-        }
-
-        // sets the float for animation movement based on the velocity of our agent
-        float mag = agent.velocity.magnitude;
-        anim.SetFloat("MoveVelocity", mag);
     }
 
-    void FixedUpdate()
+    GameObject FindClosestCombatRoom(GameObject[] activeCrRooms)
     {
-        // vision
-        // if we don't have an attack target
-        if (!attackTarget)
+        if (activeCrRooms.Length > 1)
         {
-            // find things within range around us, but only if they are on the player and friends collision layer
-            Collider[] nearbyThingsToShoot = Physics.OverlapSphere(gameObject.transform.position, attackRange / 2, layerMask);
-            // now to find the first one that is in front of us, so we can target it.
-            foreach(Collider col in nearbyThingsToShoot)
+            GameObject tMin = null;
+            float minDist = Mathf.Infinity;
+            Vector3 currentPos = transform.position;
+            foreach (GameObject t in activeCrRooms)
             {
-                Debug.Log(col.gameObject.name.ToString() + "is in our physics overlay");
-                visionObject.LookAt(col.transform.position);
-                Ray ray = new Ray(visionObject.transform.position, visionObject.transform.forward);
-                RaycastHit hit;
-                if (Physics.SphereCast(ray, 1f, out hit, 100))
+                float dist = Vector3.Distance(t.transform.position, currentPos);
+                if (dist < minDist)
                 {
-                    // did we hit the object we're looking for?
-                    if (hit.collider.transform.parent == col.transform.parent)
-                    {
-                        attackTarget = col.gameObject;
-                        Debug.Log("Our target is: " + attackTarget.name.ToString());
-                        break;
-                    }
+                    tMin = t;
+                    minDist = dist;
                 }
             }
+            return tMin;
+        }
+        else
+        {
+            return activeCrRooms[0];
         }
     }
 
@@ -262,4 +154,10 @@ public class Guard : BadGuy
     {
 
     }
+
+    // // face the player/target
+    /*
+    Vector3 targetWithoutY = new Vector3(attackTarget.transform.position.x, gameObject.transform.parent.transform.position.y, attackTarget.transform.position.z);
+    gameObject.transform.parent.gameObject.transform.LookAt(targetWithoutY);
+    */
 }
