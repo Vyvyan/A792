@@ -39,6 +39,10 @@ public class CombatRoom : MonoBehaviour {
             // this is the first combat SETUP if you will
             if (!hasInitiatedCombat)
             {
+                // we tell the game manager that we are in a combat room, and set the number of enemies we need to kill before the room opens
+                A792_GameManager.isFightingInACombatRoom = true;
+                A792_GameManager.enemiesLeftInTheCombatRoom = enemiesToSpawn;
+
                 // lock down the room
                 LockDownRoom();
 
@@ -84,22 +88,30 @@ public class CombatRoom : MonoBehaviour {
             }
             else
             {
-                // we killed all the enemies
-                // ADD ANOTHER CHECK CAUSE WE NEED TO END COMBAT ONCE EVERYTHING IS DEAD NOT JST SPAWNED
-                isInCombat = false;
-                // destroy our spawn points
-                foreach(GameObject spawner in enemySpawnPoints)
+                // we spawned all the enemies
+                // are all the enemies dead though?
+                if (A792_GameManager.enemiesLeftInTheCombatRoom <= 0)
                 {
-                    Destroy(spawner);
-                }
-                // unlock the room
-                UnlockRoom();
+                    // all the enemies are dead, so we open the room
+                    A792_GameManager.isFightingInACombatRoom = false;
+                    // just in case something weird happens to this number, we'll reset it here
+                    A792_GameManager.enemiesLeftInTheCombatRoom = 0;
+                    // this is the incombat bool for this script, idk what it does, it does stuff im sure.
+                    isInCombat = false;
+                    // destroy our spawn points
+                    foreach (GameObject spawner in enemySpawnPoints)
+                    {
+                        Destroy(spawner);
+                    }
+                    // unlock the room
+                    UnlockRoom();
 
-                // change the tags back
-                gameObject.tag = "Room";
-                if (topRight) { topRight.tag = "Room"; }
-                if (topLeft) { topLeft.tag = "Room"; }
-                if (bottomLeft) { bottomLeft.tag = "Room"; }
+                    // change the tags back
+                    gameObject.tag = "Room";
+                    if (topRight) { topRight.tag = "Room"; }
+                    if (topLeft) { topLeft.tag = "Room"; }
+                    if (bottomLeft) { bottomLeft.tag = "Room"; }
+                }
             }
         }
 	}

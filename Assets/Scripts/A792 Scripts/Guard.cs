@@ -17,6 +17,8 @@ public class Guard : BadGuy
 
     public Transform visionObject;
     public GameObject gun;
+    public GameObject bullet;
+    public GameObject bulletSpawnPoint;
 
     Vector3 lastKnownPositionOfTarget;
 
@@ -53,16 +55,63 @@ public class Guard : BadGuy
             // now we have the closest room, now to find a random point in the room to run to
             Vector2 tempVec2 = new Vector2(closestCR.transform.position.x, closestCR.transform.position.z) + Random.insideUnitCircle * 22;
             moveTarget = new Vector3(tempVec2.x, 0, tempVec2.y);
+
+            // now make them move there
+            if (moveTarget != null)
+            {
+                agent.SetDestination(moveTarget);
+            }
         }       
     }
 
     // Update is called once per frame
     void Update()
     {
-        // now make them move there
-        if (moveTarget != null)
+        // AI STATE CHANGES
+        if (aiState == AiState.movingToFirePoint)
         {
-            agent.SetDestination(moveTarget);
+            // checks if we got to our destination
+            float dist = agent.remainingDistance;
+            if (dist != Mathf.Infinity && agent.pathStatus == NavMeshPathStatus.PathComplete && agent.remainingDistance == 0)
+            { 
+                Debug.Log("switched");
+                aiState = AiState.Attacking;
+            }
+        }
+        else if (aiState == AiState.Attacking)
+        {
+            // do we have a target?! Then shoot at that dummy, shoot him ded
+            if (attackTarget)
+            {
+                // we reached out destination
+                anim.SetBool("isAiming", true);
+                anim.SetBool("isFiring", true);
+                //face the player/target
+                Vector3 targetWithoutY = new Vector3(attackTarget.transform.position.x, gameObject.transform.parent.transform.position.y, attackTarget.transform.position.z);
+                gameObject.transform.parent.gameObject.transform.LookAt(targetWithoutY);
+            }
+            // we don't have a target, we should get one
+            else
+            {
+                // change animation back to idle
+                anim.SetBool("isAiming", false);
+                anim.SetBool("isFiring", false);
+                // SWAPLS this needs to be more indepth to target skeltins nearby too
+                attackTarget = player;
+            }
+        }
+
+        // Animations
+        // are we moving?
+        if (agent.velocity != Vector3.zero)
+        {
+            anim.SetFloat("MoveVelocity", 1);
+            // this should help with the guards sometimes switching AI states before they should
+            aiState = AiState.movingToFirePoint;
+        }
+        else
+        {
+            anim.SetFloat("MoveVelocity", 0);
         }
     }
 
@@ -147,17 +196,25 @@ public class Guard : BadGuy
         bodyCleanUp.countingDown = true;
         // add humanity
         player.GetComponent<A792_Player>().humanity++;
+
+        // if we're in a combat room, make sure our death is counted
+        if (A792_GameManager.isFightingInACombatRoom)
+        {
+            A792_GameManager.enemiesLeftInTheCombatRoom--;
+        }
+
         Destroy(this);
     }
 
     public void FireGun()
     {
-
+        GameObject tempBullet = Instantiate(bullet, bulletSpawnPoint.transform.position, Quaternion.identity) as GameObject;
+        Vector3 dir = ((attackTarget.transform.position - bulletSpawnPoint.transform.position).normalized);
+        tempBullet.GetComponent<Rigidbody>().AddForce(dir * 35, ForceMode.VelocityChange);
     }
 
-    // // face the player/target
-    /*
-    Vector3 targetWithoutY = new Vector3(attackTarget.transform.position.x, gameObject.transform.parent.transform.position.y, attackTarget.transform.position.z);
-    gameObject.transform.parent.gameObject.transform.LookAt(targetWithoutY);
-    */
+    void FindATarget()
+    {
+        
+    }
 }

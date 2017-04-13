@@ -75,9 +75,15 @@ public class MrToots : MonoBehaviour {
         arm2.AddComponent<Rigidbody>();
         siren.AddComponent<Rigidbody>();
         Destroy(gameObject.GetComponent<BoxCollider>());
-        AutoDestroy autoDestroy = gameObject.transform.parent.gameObject.AddComponent<AutoDestroy>();
-        autoDestroy.timeUntilDestroy = 8;
+        //AutoDestroy autoDestroy = gameObject.transform.parent.gameObject.AddComponent<AutoDestroy>();
+        //autoDestroy.timeUntilDestroy = 8;
         isAlive = false;
+
+        // if we're in a combat room, make sure our death is counted
+        if (A792_GameManager.isFightingInACombatRoom)
+        {
+            A792_GameManager.enemiesLeftInTheCombatRoom--;
+        }
 
         // explosion
         Collider[] colliders = Physics.OverlapSphere(gameObject.transform.position, 5);

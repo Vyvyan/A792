@@ -6,6 +6,9 @@ public class A792_GameManager : MonoBehaviour
 
     public static GameObject[] activeCombatRooms;
 
+    public static int enemiesLeftInTheCombatRoom;
+    public static bool isFightingInACombatRoom;
+
     public GameObject[] activeCombatRoomsVisual;
     [Header("Enemies")]
     public GameObject enemy_MrToots;
@@ -14,7 +17,8 @@ public class A792_GameManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-	    
+        isFightingInACombatRoom = false;
+        enemiesLeftInTheCombatRoom = 0;
 	}
 	
 	// Update is called once per frame

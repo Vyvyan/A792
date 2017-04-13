@@ -15,6 +15,7 @@ public class DestroyAfterTimePrompt : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        /*       
 	    if (countingDown)
         {
             countdownToDestroy -= Time.deltaTime;
@@ -24,5 +25,6 @@ public class DestroyAfterTimePrompt : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        */
 	}
 }

@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\A792 Scripts\A792_EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\A792_GameManager.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\A792_Player.cs" />
+    <Compile Include="Assets\Scripts\A792 Scripts\AntiGravBullets.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\BadGuy.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\Blood.cs" />
     <Compile Include="Assets\Scripts\A792 Scripts\CombatRoom.cs" />
