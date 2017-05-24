@@ -4,7 +4,7 @@ using Steamworks;
 
 public class RobotFriend : MonoBehaviour {
 
-    NavMeshAgent agent;
+    UnityEngine.AI.NavMeshAgent agent;
     public Transform[] goldTargets;
     Transform target;
 
@@ -32,7 +32,7 @@ public class RobotFriend : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        agent = gameObject.GetComponent<NavMeshAgent>();
+        agent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
         anim = gameObject.GetComponent<Animator>();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         audioS = GetComponent<AudioSource>();
@@ -76,7 +76,7 @@ public class RobotFriend : MonoBehaviour {
                     float dist = agent.remainingDistance;
                     if (!isInIenum)
                     {
-                        if (dist != Mathf.Infinity && agent.pathStatus == NavMeshPathStatus.PathComplete && agent.remainingDistance == 0)
+                        if (dist != Mathf.Infinity && agent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathComplete && agent.remainingDistance == 0)
                         {
                             miningTimerCurrent = 0;
                             dustParticles.loop = true;

@@ -375,7 +375,7 @@ namespace PrimitivePlus
 			mesh.uv = uv;
 			mesh.triangles = triangles;
 			mesh.RecalculateBounds();
-			mesh.Optimize();
+			;
 			return mesh;
 		}
 	}

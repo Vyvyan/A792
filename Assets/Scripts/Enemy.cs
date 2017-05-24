@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour {
     bool hasStartedToAutoDestroySelf;
 
     s_WanderingAI aiScript;
-    NavMeshAgent agent;
+    UnityEngine.AI.NavMeshAgent agent;
     Animator animator;
 
     public GameObject triggerObject;
@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour {
     void Start ()
     {
         aiScript = gameObject.GetComponent<s_WanderingAI>();
-        agent = gameObject.GetComponent<NavMeshAgent>();
+        agent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
         animator = gameObject.GetComponent<Animator>();
         //triggerObject = transform.GetChild(10).gameObject;
         audio = GetComponent<AudioSource>();

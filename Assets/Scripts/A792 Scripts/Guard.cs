@@ -4,7 +4,7 @@ using System.Collections;
 public class Guard : BadGuy
 {
     Vector3 moveTarget;
-    NavMeshAgent agent;
+    UnityEngine.AI.NavMeshAgent agent;
 
     Animator anim;
     Rigidbody rb;
@@ -38,7 +38,7 @@ public class Guard : BadGuy
 
     void Start()
     {
-        agent = GetComponentInParent<NavMeshAgent>();
+        agent = GetComponentInParent<UnityEngine.AI.NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
         anim = GetComponent<Animator>();
         aiState = AiState.movingToFirePoint;
@@ -72,7 +72,7 @@ public class Guard : BadGuy
         {
             // checks if we got to our destination
             float dist = agent.remainingDistance;
-            if (dist != Mathf.Infinity && agent.pathStatus == NavMeshPathStatus.PathComplete && agent.remainingDistance == 0)
+            if (dist != Mathf.Infinity && agent.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathComplete && agent.remainingDistance == 0)
             { 
                 Debug.Log("switched");
                 aiState = AiState.Attacking;
@@ -145,9 +145,9 @@ public class Guard : BadGuy
 
         randDirection += origin;
 
-        NavMeshHit navHit;
+        UnityEngine.AI.NavMeshHit navHit;
 
-        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+        UnityEngine.AI.NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
 
         return navHit.position;
     }

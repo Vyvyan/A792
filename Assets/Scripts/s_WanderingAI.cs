@@ -8,7 +8,7 @@ public class s_WanderingAI : MonoBehaviour
     public float wanderTimer;
 
     private Transform target;
-    private NavMeshAgent agent;
+    private UnityEngine.AI.NavMeshAgent agent;
     private float timer;
     public bool wander;
 
@@ -17,7 +17,7 @@ public class s_WanderingAI : MonoBehaviour
     // Use this for initialization
     void OnEnable()
     {
-        agent = GetComponentInParent<NavMeshAgent>();
+        agent = GetComponentInParent<UnityEngine.AI.NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
         timer = wanderTimer;
     }
@@ -57,9 +57,9 @@ public class s_WanderingAI : MonoBehaviour
 
         randDirection += origin;
 
-        NavMeshHit navHit;
+        UnityEngine.AI.NavMeshHit navHit;
 
-        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+        UnityEngine.AI.NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
 
         return navHit.position;
     }

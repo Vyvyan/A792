@@ -1,0 +1,170 @@
+fileFormatVersion: 2
+guid: a32b8ed2e4a90504587030b10aba2832
+timeCreated: 1495605097
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Boot
+    100002: chest
+    100004: Elbow
+    100006: Eyes
+    100008: foot_L
+    100010: foot_R
+    100012: forearm_L
+    100014: forearm_R
+    100016: Glove
+    100018: hand_L
+    100020: hand_L_001
+    100022: hand_R
+    100024: hand_R_001
+    100026: head
+    100028: Helmet
+    100030: hips
+    100032: //RootNode
+    100034: metarig
+    100036: neck
+    100038: Person
+    100040: shin_L
+    100042: shin_R
+    100044: Shohulder
+    100046: spine
+    100048: Thigh__Armor
+    100050: thigh_L
+    100052: thigh_R
+    100054: Thong
+    100056: Torso
+    100058: upper_arm_L
+    100060: upper_arm_R
+    400000: Boot
+    400002: chest
+    400004: Elbow
+    400006: Eyes
+    400008: foot_L
+    400010: foot_R
+    400012: forearm_L
+    400014: forearm_R
+    400016: Glove
+    400018: hand_L
+    400020: hand_L_001
+    400022: hand_R
+    400024: hand_R_001
+    400026: head
+    400028: Helmet
+    400030: hips
+    400032: //RootNode
+    400034: metarig
+    400036: neck
+    400038: Person
+    400040: shin_L
+    400042: shin_R
+    400044: Shohulder
+    400046: spine
+    400048: Thigh__Armor
+    400050: thigh_L
+    400052: thigh_R
+    400054: Thong
+    400056: Torso
+    400058: upper_arm_L
+    400060: upper_arm_R
+    2300000: Boot
+    2300002: Elbow
+    2300004: Eyes
+    2300006: Glove
+    2300008: Helmet
+    2300010: Shohulder
+    2300012: Thigh__Armor
+    2300014: Thong
+    2300016: Torso
+    3300000: Boot
+    3300002: Elbow
+    3300004: Eyes
+    3300006: Glove
+    3300008: Helmet
+    3300010: Shohulder
+    3300012: Thigh__Armor
+    3300014: Thong
+    3300016: Torso
+    4300000: Person
+    4300002: Torso
+    4300004: Thong
+    4300006: Thigh__Armor
+    4300008: Shohulder
+    4300010: Helmet
+    4300012: Glove
+    4300014: Eyes
+    4300016: Elbow
+    4300018: Boot
+    7400000: Default Take
+    9500000: //RootNode
+    13700000: Person
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 50
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -6,7 +6,7 @@ public class GuardAnimationTest : MonoBehaviour {
     Animator anim;
     Rigidbody rb;
     Rigidbody[] limbRBs;
-    NavMeshAgent agent;
+    UnityEngine.AI.NavMeshAgent agent;
 
 	// Use this for initialization
 	void Start ()
@@ -14,7 +14,7 @@ public class GuardAnimationTest : MonoBehaviour {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         limbRBs = GetComponentsInChildren<Rigidbody>();
-        agent = GetComponentInParent<NavMeshAgent>();
+        agent = GetComponentInParent<UnityEngine.AI.NavMeshAgent>();
 	}
 	
 	// Update is called once per frame

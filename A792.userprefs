@@ -1,0 +1,12 @@
+﻿<Properties StartupItem="A792.Plugins.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\A792 Scripts\CombatRoom.cs">
+    <Files>
+      <File FileName="Assets\Scripts\A792 Scripts\CombatRoom.cs" Line="77" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

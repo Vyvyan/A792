@@ -6,7 +6,7 @@ public class MrToots : MonoBehaviour {
     // references to things we need to destroy on death/change
     public s_WanderingAI wanderingScript;
     public GameObject deadToots, aliveToots, siren, arm1, arm2;
-    public NavMeshAgent agent;
+    public UnityEngine.AI.NavMeshAgent agent;
 
     [Header("Health Stuff")]
     public int health;
